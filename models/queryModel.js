@@ -31,6 +31,10 @@ const querySchema = new Schema(
 		unique_query_id: {
 			required: true,
 			type: String
+		},
+		status: {
+			required: true,
+			type: String
 		}
 	},
 	{

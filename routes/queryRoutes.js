@@ -11,7 +11,7 @@ const {
 
 router.route('/create').post(createNewQuery);
 router.route('/list').get(getAllQueries);
-router.route('/list/unique').get(getQueryByUniqueId);
+router.route('/list/unique').post(getQueryByUniqueId);
 router.route('/list/:id').get(getQueryById);
 router.route('/list/delete/:id').delete(deleteQueryById);
 router.route('/list/update/:id').put(updateQueryById);

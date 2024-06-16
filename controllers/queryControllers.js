@@ -5,6 +5,7 @@ const createNewQuery = asyncHandler(async (req, res) => {
 	let data = req.body;
 	let newQuery = await Query.create({
 		unique_query_id: data.mobile_num + data.adhar_num.substring(8, 12),
+		status: 'pending',
 		...data
 	});
 	if (newQuery) {
@@ -70,9 +71,8 @@ const getQueryByUniqueId = asyncHandler(async (req, res) => {
 			message: 'Please enter your mobile number'
 		});
 	}
-
-	const query = await Query.findOne({
-		unique_query_id: mobile_num + adhar_num.substring(8, 12)
+	const query = await Query.find({
+		unique_query_id: mobile_num + adhar_num
 	});
 	if (query) {
 		res.status(200).send({
@@ -87,8 +87,15 @@ const getQueryByUniqueId = asyncHandler(async (req, res) => {
 
 const updateQueryById = asyncHandler(async (req, res) => {
 	const query = await Query.findById(req.params.id);
-	const { adhar_num, user_name, mobile_num, pincode, category, queryDesc } =
-		req.body;
+	const {
+		adhar_num,
+		user_name,
+		mobile_num,
+		pincode,
+		category,
+		queryDesc,
+		status
+	} = req.body;
 
 	if (adhar_num === '')
 		return res.status(500).send({ message: 'Food item name cannot be empty' });
@@ -112,6 +119,7 @@ const updateQueryById = asyncHandler(async (req, res) => {
 			mobile_num || adhar_num
 				? mobile_num + adhar_num.substring(8, 12)
 				: query.unique_query_id;
+		query.status = status ? status : query.status;
 
 		await query.save();
 		res.status(200).send({
